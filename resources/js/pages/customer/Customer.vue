@@ -8,55 +8,83 @@ let customers = ref([]);
 const editing = ref(false);
 const formValues = ref();
 
-const editCustomer = (customer) =>{
-    editing.value = true;
- 
-    console.log(customer);
-    formValues.value = {
-        firstname : customer.firstname,
-        lastname : customer.lastname,
-        fullname : customer.firstname + ' ' + customer.lastname,
-        mobilenumber : customer.mobilenumber,
-        city : customer.city
-    }
-   
-    $("#customer-form").modal('show');
-}
 
-// const editCustomer = async (customerid) => {
-//       try {
-//         const response = await axios.get('/api/user/'+customerid);
-//         form.value = response.data;
-//         console.log(form.value);
-//       } catch (error) {
-//         console.error(error);
-//       }
-//     };
 
 const addCustomer = () =>{
     editing.value = false;
+    form.id ='';
+    form.FirstName ='';
+    form.LastName ='';
+    form.MobileNumber ='';
+    form.City ='';
+    form.IsActive='';
     $("#customer-form").modal('show');
 }
 
 const form = reactive({
-    firstname : '',
-    lastname : '',
-    mobilenumber : '',
-    city : '',
+    id : '',
+    FirstName : '',
+    LastName : '',
+    MobileNumber : '',
+    City : '',
 
 });
 
+
+const findCustomer = async (id) =>{
+editing.value = true;
+axios.get('/api/customer/'+id)
+.then((response)=>{
+    form.id = response.data.id;
+    form.FirstName = response.data.FirstName;
+    form.LastName = response.data.LastName;
+    form.MobileNumber = response.data.MobileNumber;
+    form.City = response.data.City;
+    form.IsActive = response.data.IsActive;
+    $("#customer-form").modal('show');
+    
+   
+})
+
+
+}
+const updateCustomer = (id) =>{
+  axios.put('api/customer/'+id,form)
+  .then((response)=>{
+    const index = customers.value.findIndex(customer => customer.id === response.data.id);
+    customers.value[index] = response.data;
+    console.log(customers.value[index])
+    console.log(index)
+    
+
+  }).catch((error)=>{
+    console.log(error);
+  }).finally(()=>{
+    editing.value= false;
+    form.id ='';
+    form.FirstName ='';
+    form.LastName ='';
+    form.MobileNumber ='';
+    form.City ='';
+    $("#customer-form").modal('hide');
+  })
+
+}
+
 const createCustomer = ()=> {
-    form.fullname = form.firstname + ' ' + form.lastname;
+    form.FullName = form.FirstName + ' ' + form.LastName;
     axios.post('/api/customer',form)
     .then((response)=>{
         customers.value.unshift(response.data);
-        form.firstname ='';
-        form.lastname ='';
-        form.mobilenumber ='';
-        form.city ='';
+        form.id ='';
+        form.FirstName ='';
+        form.LastName ='';
+        form.MobileNumber ='';
+        form.City ='';
         $("#customer-form").modal('hide');
-    });  
+    }).catch((error)=>{
+    console.log(error);
+  });  
 }
 
 const getCustomers = async () =>{
@@ -64,11 +92,10 @@ axios.get('/api/customer')
 .then((response)=>{
     customers.value = response.data
     
-   
-})
-
-
+});
 }
+
+
 onMounted(()=>{
     getCustomers();
 });
@@ -106,19 +133,21 @@ onMounted(()=>{
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form @submit.prevent="createUser" :initial-values="formValues">
+                            <form>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                            <label for="exampleInputEmail1">First Name</label>
-                                            <input v-model="form.firstname" type="text" class="form-control" placeholder="Enter First Name">
-                                            </div>
+                                            <label for="lblFirstName">First Name</label>
+                                            <!-- <input v-if="editing" v-model="selected.value.FirstName"  type="text" class="form-control" placeholder="Enter First Name"> -->
+                                            <input v-model="form.FirstName" type="text" class="form-control" placeholder="Enter First Name">
+                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                            <label for="exampleInputPassword1">Last Name</label>
-                                            <input v-model="form.lastname" type="text" class="form-control" placeholder="Enter Last name">
+                                            <label for="lblLastName">Last Name</label>
+                                            <!-- <input v-if="editing" v-model="selected.value.LastName"  type="text" class="form-control" placeholder="Enter Last Name"> -->
+                                            <input v-model="form.LastName" type="text" class="form-control" placeholder="Enter Last name">
                                         </div>
                                         </div>
                                     </div>
@@ -126,16 +155,31 @@ onMounted(()=>{
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                            <label for="exampleInputEmail1">Mobile No.</label>
-                                            <input v-model="form.mobilenumber" maxlength="10" minlength="10" type="number" class="form-control"  placeholder="Enter mobile number">
+                                            <label for="lblMobileNumber">Mobile No.</label>
+                                            <!-- <input v-if="editing" v-model="selected.value.MobileNumber"  type="number" class="form-control" placeholder="Enter Mobile No."> -->
+                                            <input v-model="form.MobileNumber"  type="number" class="form-control"  placeholder="Enter mobile number">
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                            <label for="exampleInputPassword1">City</label>
-                                            <input v-model="form.city" type="text" class="form-control" placeholder="Enter City">
+                                            <label for="lblCity">City</label>
+                                            <!-- <input v-if="editing" v-model="selected.value.City"  type="text" class="form-control" placeholder="Enter City"> -->
+                                            <input v-model="form.City" type="text" class="form-control" placeholder="Enter City">
                                         </div>
                                         </div>
+                                    </div>
+                                    <div class="row" v-if="editing">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                            <label for="lblIsActive">Is Active?</label>
+                                            <!-- <input v-if="editing" v-model="selected.value.MobileNumber"  type="number" class="form-control" placeholder="Enter Mobile No."> -->
+                                            <select class="form-control" v-model="form.IsActive">
+                                                <option value="1">TRUE</option>
+                                                <option value="0">FALSE</option>
+                                            </select>
+                                            </div>
+                                        </div>
+                                        
                                     </div>
                                 </div>
 
@@ -143,7 +187,7 @@ onMounted(()=>{
                         </div>
                         <div class="modal-footer justify-content-between">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button v-if="editing" @click="updateCustomer" type="button" class="btn btn-primary">Update</button>
+                            <button v-if="editing" @click="updateCustomer(form.id)" type="button" class="btn btn-primary">Update</button>
                             <button v-else @click="createCustomer" type="button" class="btn btn-primary">Save</button>
                         </div>
                     </div>
@@ -179,7 +223,7 @@ onMounted(()=>{
             <td>{{customer.MobileNumber}}</td>
             <td>{{customer.City}} </td>
             <td>{{ customer.IsActive ? "Yes" : "No" }}</td>
-            <td><button @click.prevent="editCustomer(customer.id)" type="button" class="btn btn-block btn-primary">  <i class="nav-icon fa fa-edit"></i></button></td>
+            <td><button @click.prevent="findCustomer(customer.id)" type="button" class="btn btn-block btn-primary">  <i class="nav-icon fa fa-edit"></i></button></td>
         </tr>
 
     </tbody>
