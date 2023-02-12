@@ -27,9 +27,17 @@ Route::get('/', function () {
 
 Route::get('{view}',ApplicationController::class)->where('view','(.*)');  
 
-
+//Customer
 Route::get('/api/customer',[CustomerController::class,'index']); 
+Route::post('/api/customer',[CustomerController::class,'store']); 
+Route::get('/api/customer/{id}',[CustomerController::class,'show']); 
+
+//SKU
 Route::get('/api/sku',[SKUController::class,'index']); 
+
+
+
+//PurchaseOrder
 Route::get('/api/purchaseorder',[PurchaseOrderController::class,'index']); 
 // Route::get('/api/customer',function (){
 //     return Customer::all();

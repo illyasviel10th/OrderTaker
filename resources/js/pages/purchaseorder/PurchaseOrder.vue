@@ -35,7 +35,8 @@ onMounted(()=>{
                 </ol>
                 </div>
                 <div class="col-sm-1 offset-sm-5">
-                    <button type="button" class="btn btn-block btn-success float-sm-right">  <i class="nav-icon fa fa-plus"></i> Create</button>
+                    <router-link to="/createorder" class="btn btn-block btn-success float-sm-right">  <i class="nav-icon fa fa-plus"></i> Create</router-link>
+                
                 </div>
             </div>
         </div>
