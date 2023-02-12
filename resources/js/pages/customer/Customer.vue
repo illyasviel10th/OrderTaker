@@ -50,7 +50,7 @@ const createCustomer = ()=> {
     form.fullname = form.firstname + ' ' + form.lastname;
     axios.post('/api/customer',form)
     .then((response)=>{
-        customers.value.push.unshift(response.data);
+        customers.value.unshift(response.data);
         form.firstname ='';
         form.lastname ='';
         form.mobilenumber ='';
