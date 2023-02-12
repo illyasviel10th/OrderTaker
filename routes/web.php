@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\CustomerController;
-
+use App\Http\Controllers\SKUController;
+use App\Http\Controllers\PurchaseOrderController;
+use App\Models\Customer;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,4 +28,9 @@ Route::get('/', function () {
 Route::get('{view}',ApplicationController::class)->where('view','(.*)');  
 
 
-Route::get('/api/customers',[CustomerController::class,'index']); 
+Route::get('/api/customer',[CustomerController::class,'index']); 
+Route::get('/api/sku',[SKUController::class,'index']); 
+Route::get('/api/purchaseorder',[PurchaseOrderController::class,'index']); 
+// Route::get('/api/customer',function (){
+//     return Customer::all();
+// }); 

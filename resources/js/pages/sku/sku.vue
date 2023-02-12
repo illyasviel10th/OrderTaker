@@ -1,3 +1,23 @@
+<script setup>
+import axios from 'axios';
+import {ref,onMounted} from 'vue';
+
+let sku = ref([]);
+const getSku = () =>{
+axios.get('/api/sku')
+.then((response)=>{
+    sku.value = response.data
+    console.log(sku.value)
+   
+})
+
+}
+onMounted(()=>{
+    getSku();
+});
+
+</script>
+
 <template>
 
     <div class="content-header">
@@ -36,12 +56,13 @@
         </tr>
     </thead>
     <tbody>
-        <tr> <td>1</td>
-            <td>Riza, Jose</td>
-            <td>917123</td>
-            <td>Makati </td>
-            <td>TRUE</td>
-            <td>Sample Image</td>
+        <tr v-for="(s,index) in sku" :key="s.id"> 
+            <td>{{ index+1 }}</td>
+            <td>{{s.Name}}</td>
+            <td>{{s.Code}}</td>
+            <td>{{s.UnitPrice}} </td>
+            <td>{{s.IsActive ? "Yes": "No"}}</td>
+            <td>{{s.Image}}</td>
             <td><button type="button" class="btn btn-block btn-primary">  <i class="nav-icon fa fa-edit"></i></button></td>
         </tr>
 

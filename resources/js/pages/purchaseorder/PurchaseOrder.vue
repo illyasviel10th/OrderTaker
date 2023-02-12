@@ -1,3 +1,28 @@
+<script setup>
+import axios from 'axios';
+import {ref,onMounted} from 'vue';
+// var req = axios.get('/api/customer')
+// .then(response => this.data = response.data);
+// req.then(x => console.log("Done!"));
+let purchaseorder = ref([]);
+const getPurchaseOrder = () =>{
+axios.get('/api/purchaseorder')
+.then((response)=>{
+    purchaseorder.value = response.data
+    console.log(purchaseorder.value)
+    
+   
+})
+
+}
+onMounted(()=>{
+    getPurchaseOrder();
+});
+
+
+</script>
+
+
 <template>
 
     <div class="content-header">

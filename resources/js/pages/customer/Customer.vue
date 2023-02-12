@@ -1,19 +1,28 @@
 <script setup>
 import axios from 'axios';
 import {ref,onMounted} from 'vue';
-
-
-let customers = [];
-let getCustomers = () =>{
-axios.get('/api/customers').then((response)=>{
-    customers = response.data
+// var req = axios.get('/api/customer')
+// .then(response => this.data = response.data);
+// req.then(x => console.log("Done!"));
+let customers = ref([]);
+const getCustomers = () =>{
+axios.get('/api/customer')
+.then((response)=>{
+    customers.value = response.data
+    
+   
 })
+
 }
-
-
-onMounted(() => {
+onMounted(()=>{
     getCustomers();
 });
+
+
+// onMounted(() => {
+//     getCustomers();
+//     // console.log('mounted')
+// });
 </script>
 
 <template>
