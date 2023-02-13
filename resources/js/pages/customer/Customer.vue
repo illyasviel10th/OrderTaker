@@ -6,9 +6,6 @@ import {ref, onMounted, reactive} from 'vue';
 // req.then(x => console.log("Done!"));
 let customers = ref([]);
 const editing = ref(false);
-const formValues = ref();
-
-
 
 const addCustomer = () =>{
     editing.value = false;
@@ -27,6 +24,7 @@ const form = reactive({
     LastName : '',
     MobileNumber : '',
     City : '',
+
 
 });
 
@@ -84,6 +82,7 @@ const createCustomer = ()=> {
         $("#customer-form").modal('hide');
     }).catch((error)=>{
     console.log(error);
+    window.alert(error);
   });  
 }
 

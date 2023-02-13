@@ -1,19 +1,28 @@
 <script setup>
 import axios from 'axios';
-import {ref,onMounted} from 'vue';
+import {ref, onMounted, reactive} from 'vue';
 // var req = axios.get('/api/customer')
 // .then(response => this.data = response.data);
 // req.then(x => console.log("Done!"));
 let purchaseorder = ref([]);
-const getPurchaseOrder = () =>{
+// const getPurchaseOrder = () =>{
+// axios.get('/api/purchaseorder')
+// .then((response)=>{
+//     purchaseorder.value = response.data
+//     console.log(purchaseorder.value)
+    
+   
+// })
+
+// }
+
+const getPurchaseOrder = async () =>{
 axios.get('/api/purchaseorder')
 .then((response)=>{
     purchaseorder.value = response.data
     console.log(purchaseorder.value)
     
-   
-})
-
+});
 }
 onMounted(()=>{
     getPurchaseOrder();
@@ -62,11 +71,12 @@ onMounted(()=>{
         </tr>
     </thead>
     <tbody>
-        <tr> <td>1</td>
-            <td>Riza, Jose</td>
-            <td>917123</td>
-            <td>Makati </td>
-            <td>TRUE</td>
+        <tr v-for="(orders,index) in purchaseorder" :key="orders.id"> 
+            <td>{{index + 1}}</td>
+            <td>{{orders.fullname}}</td>
+            <td>{{orders.DateOfDelivery}}</td>
+            <td>{{orders.Status}} </td>
+            <td>{{orders.AmountDue}}</td>
           
             <td><button type="button" class="btn btn-block btn-primary">  <i class="nav-icon fa fa-edit"></i>Edit</button></td>
         </tr>

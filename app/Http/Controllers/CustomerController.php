@@ -9,12 +9,24 @@ use Carbon\Carbon;
 class CustomerController extends Controller
 {
     public function index(){
-        $customers = Customers::where('IsActive','=',1)->get();
+        $customers = Customers::where('IsActive','=',1)
+        ->orderBy('id','DESC')
+        ->get();
         return response()->json($customers);
         // return response()->json($customers);
     }
 
     public function store(){
+
+        $record = Customers::where('MobileNumber', request('MobileNumber'))
+        // ->where('FullName', request('FullName'))
+        ->first();
+        if ($record) {
+            return response()->json([
+                'message' => 'A record with the same mobile number already exists.',
+            ], 409);
+        }
+    
         $datetime = Carbon::now();
         $datetoday = $datetime->toDateString();
         // $dateCreated = Carbon::createFromFormat('Y-m-d', );

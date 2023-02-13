@@ -9,4 +9,16 @@ class PurchaseOrder extends Model
 {
     use HasFactory;
     protected $table = 'purchase_orders';
+    protected $fillable = [
+        'CustomerID',
+        'DateOfDelivery',
+        'Status',
+        'AmountDue',
+        'DateCreated',
+        'CreatedBy',
+        'UserID',
+        'IsActive'
+        
+       
+    ];
 }
